@@ -58,28 +58,28 @@ export default function AboutSection({ aboutData }: AboutSectionProps) {
     <section id="about" className="min-h-screen relative px-5 sm:px-8 md:px-10 py-20 overflow-hidden">
       {/* ── Floating Icons ────────────────────────────────────── */}
       <FadeIn delay={0.1} x={-80} y={0} duration={0.9}>
-        <Magnet strength={10} padding={300} className="absolute top-[4%] left-[1%] sm:left-[2%] md:left-[4%] z-10">
+        <Magnet strength={10} padding={300} className="absolute top-[4%] left-[1%] sm:left-[2%] md:left-[4%] z-10 hidden sm:block">
           <img src={moonIcon} alt="Moon"
             className="w-[100px] sm:w-[140px] md:w-[190px] drop-shadow-[0_10px_20px_rgba(255,255,255,0.05)] cursor-pointer" />
         </Magnet>
       </FadeIn>
 
       <FadeIn delay={0.25} x={-80} y={0} duration={0.9}>
-        <Magnet strength={10} padding={300} className="absolute bottom-[8%] left-[3%] sm:left-[6%] md:left-[10%] z-10">
+        <Magnet strength={10} padding={300} className="absolute bottom-[8%] left-[3%] sm:left-[6%] md:left-[10%] z-10 hidden sm:block">
           <img src={objectIcon1} alt="3D Object"
             className="w-[80px] sm:w-[120px] md:w-[160px] drop-shadow-[0_10px_20px_rgba(255,255,255,0.05)] cursor-pointer" />
         </Magnet>
       </FadeIn>
 
       <FadeIn delay={0.15} x={80} y={0} duration={0.9}>
-        <Magnet strength={10} padding={300} className="absolute top-[4%] right-[1%] sm:right-[2%] md:right-[4%] z-10">
+        <Magnet strength={10} padding={300} className="absolute top-[4%] right-[1%] sm:right-[2%] md:right-[4%] z-10 hidden sm:block">
           <img src={legoIcon} alt="Lego"
             className="w-[100px] sm:w-[140px] md:w-[190px] drop-shadow-[0_10px_20px_rgba(255,255,255,0.05)] cursor-pointer" />
         </Magnet>
       </FadeIn>
 
       <FadeIn delay={0.3} x={80} y={0} duration={0.9}>
-        <Magnet strength={10} padding={300} className="absolute bottom-[8%] right-[3%] sm:right-[6%] md:right-[10%] z-10">
+        <Magnet strength={10} padding={300} className="absolute bottom-[8%] right-[3%] sm:right-[6%] md:right-[10%] z-10 hidden sm:block">
           <img src={objectIcon2} alt="3D Group"
             className="w-[100px] sm:w-[140px] md:w-[190px] drop-shadow-[0_10px_20px_rgba(255,255,255,0.05)] cursor-pointer" />
         </Magnet>

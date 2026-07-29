@@ -66,9 +66,23 @@ class Service(models.Model):
         return f"{self.number} - {self.name}"
 
 
+PROJECT_CATEGORY_CHOICES = [
+    ('Financial Data Analysis', 'Financial Data Analysis'),
+    ('Mobile Development', 'Mobile Development'),
+    ('Full Stack Development', 'Full Stack Development'),
+    ('Design', 'Design'),
+    ('Other', 'Other'),
+]
+
+
 class Project(models.Model):
     number = models.CharField(max_length=10, help_text="e.g. 01, 02")
-    category = models.CharField(max_length=100, help_text="e.g. Client, Personal")
+    category = models.CharField(
+        max_length=100,
+        choices=PROJECT_CATEGORY_CHOICES,
+        default='Other',
+        help_text="Project category for filtering on the portfolio"
+    )
     name = models.CharField(max_length=200)
     description = models.TextField(blank=True, default="", help_text="Short project description")
     live_link = models.URLField(max_length=500, blank=True, null=True)

@@ -56,50 +56,105 @@ export default function Footer({ socialsData, userName }: FooterProps) {
   const scrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
 
   return (
-    <footer className="bg-[#0C0C0C] pt-8 pb-10 px-6 md:px-10 border-t border-white/[0.06]">
-      <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
-        {/* Branding */}
-        <div>
-          <span className="text-white font-black tracking-widest text-xl uppercase">{name}</span>
-          <p className="text-white/30 text-xs mt-1.5 uppercase tracking-wider">
-            © {year} {name}. All rights reserved.
-          </p>
-        </div>
+    <footer className="bg-[#0C0C0C] pt-10 pb-8 px-6 md:px-10 border-t border-white/[0.06] relative overflow-hidden">
+      {/* Gradient accent */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/2 h-px bg-gradient-to-r from-transparent via-[#B501A7]/30 to-transparent" />
+      
+      {/* Ambient glow */}
+      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[400px] h-[200px] rounded-full pointer-events-none"
+        style={{ background: 'radial-gradient(ellipse, rgba(181,1,167,0.06) 0%, transparent 70%)' }}
+      />
 
-        {/* Social icons */}
-        <div className="flex gap-3 flex-wrap justify-center">
-          {displaySocials.map((social, i) => (
-            <motion.a
-              key={social.platform}
-              href={social.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              title={social.platform}
-              whileHover={{ y: -3, scale: 1.12 }}
-              whileTap={{ scale: 0.95 }}
-              initial={{ opacity: 0, y: 10 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.08 }}
-              className="w-10 h-10 rounded-full border border-white/10 bg-white/[0.04] flex items-center justify-center text-white/50 hover:text-white hover:border-[#B501A7]/60 hover:bg-[#B501A7]/10 transition-colors duration-200"
+      <div className="max-w-7xl mx-auto relative">
+        <div className="flex flex-col md:flex-row justify-between items-center gap-6 md:gap-8">
+          {/* Branding */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+            className="text-center md:text-left"
+          >
+            <span className="text-white font-black tracking-widest text-xl uppercase">{name}</span>
+            <p className="text-white/30 text-xs mt-2 uppercase tracking-wider">
+              © {year} {name}. All rights reserved.
+            </p>
+          </motion.div>
+
+          {/* Social icons */}
+          <motion.div
+            className="flex gap-3 flex-wrap justify-center"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+          >
+            {displaySocials.map((social, i) => (
+              <motion.a
+                key={social.platform}
+                href={social.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                title={social.platform}
+                whileHover={{ y: -4, scale: 1.15 }}
+                whileTap={{ scale: 0.95 }}
+                initial={{ opacity: 0, y: 10 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.2 + i * 0.08 }}
+                className="footer-social w-11 h-11 rounded-full border border-white/10 bg-white/[0.04] flex items-center justify-center text-white/50 hover:text-white hover:border-[#B501A7]/60 hover:bg-[#B501A7]/10 transition-all duration-300"
+              >
+                <PlatformIcon platform={social.platform} />
+              </motion.a>
+            ))}
+          </motion.div>
+
+          {/* Back to top */}
+          <motion.button
+            onClick={scrollToTop}
+            whileHover={{ y: -3 }}
+            whileTap={{ scale: 0.95 }}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="group flex items-center gap-2 text-white/40 hover:text-white text-xs font-semibold uppercase tracking-widest transition-colors duration-300"
+          >
+            <span className="relative">
+              Back to top
+              <span className="absolute -bottom-0.5 left-0 w-0 h-px bg-[#B501A7] group-hover:w-full transition-all duration-300" />
+            </span>
+            <svg 
+              width="14" 
+              height="14" 
+              viewBox="0 0 14 14" 
+              fill="none" 
+              className="group-hover:-translate-y-1 transition-transform duration-300"
             >
-              <PlatformIcon platform={social.platform} />
-            </motion.a>
-          ))}
+              <path d="M7 11V3M3 7l4-4 4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </motion.button>
         </div>
 
-        {/* Back to top */}
-        <motion.button
-          onClick={scrollToTop}
-          whileHover={{ y: -3 }}
-          whileTap={{ scale: 0.95 }}
-          className="flex items-center gap-2 text-white/40 hover:text-white text-xs font-semibold uppercase tracking-widest transition-colors duration-200"
+        {/* Decorative line */}
+        <motion.div 
+          className="mt-8 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent"
+          initial={{ scaleX: 0 }}
+          whileInView={{ scaleX: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 1, delay: 0.3 }}
+        />
+        
+        {/* Bottom tagline */}
+        <motion.p 
+          className="text-center text-white/20 text-xs mt-6 uppercase tracking-widest"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.5 }}
         >
-          Back to top
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-            <path d="M7 11V3M3 7l4-4 4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
-        </motion.button>
+          Crafted with passion ✦ {year}
+        </motion.p>
       </div>
     </footer>
   );

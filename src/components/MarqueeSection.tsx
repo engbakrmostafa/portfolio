@@ -45,13 +45,13 @@ export default function MarqueeSection({ marqueeData }: MarqueeSectionProps) {
   return (
     <section
       ref={sectionRef}
-      className="bg-[#0C0C0C] pt-24 sm:pt-32 md:pt-40 pb-10 overflow-hidden"
+      className="bg-[#0C0C0C] pt-24 sm:pt-32 md:pt-40 pb-8 sm:pb-10 overflow-hidden"
     >
       {/* Row 1 - moves right */}
       {row1Images.length > 0 && (
-        <div className="flex gap-3 mb-3" style={{ willChange: 'transform' }}>
+        <div className="flex gap-2 sm:gap-3 mb-2 sm:mb-3" style={{ willChange: 'transform' }}>
           <div
-            className="flex gap-3"
+            className="flex gap-2 sm:gap-3"
             style={{
               transform: `translateX(${offset - 200}px)`,
               willChange: 'transform',
@@ -62,7 +62,7 @@ export default function MarqueeSection({ marqueeData }: MarqueeSectionProps) {
                 key={i}
                 src={src}
                 alt={`Gallery row 1 - ${i}`}
-                className="w-[420px] h-[270px] rounded-2xl object-cover"
+                className="w-[280px] sm:w-[320px] md:w-[380px] lg:w-[420px] h-[180px] sm:h-[210px] md:h-[250px] lg:h-[270px] rounded-xl sm:rounded-2xl object-cover"
                 loading="lazy"
               />
             ))}
@@ -72,9 +72,9 @@ export default function MarqueeSection({ marqueeData }: MarqueeSectionProps) {
 
       {/* Row 2 - moves left */}
       {row2Images.length > 0 && (
-        <div className="flex gap-3" style={{ willChange: 'transform' }}>
+        <div className="flex gap-2 sm:gap-3" style={{ willChange: 'transform' }}>
           <div
-            className="flex gap-3"
+            className="flex gap-2 sm:gap-3"
             style={{
               transform: `translateX(${-(offset - 200)}px)`,
               willChange: 'transform',
@@ -85,7 +85,7 @@ export default function MarqueeSection({ marqueeData }: MarqueeSectionProps) {
                 key={i}
                 src={src}
                 alt={`Gallery row 2 - ${i}`}
-                className="w-[420px] h-[270px] rounded-2xl object-cover"
+                className="w-[280px] sm:w-[320px] md:w-[380px] lg:w-[420px] h-[180px] sm:h-[210px] md:h-[250px] lg:h-[270px] rounded-xl sm:rounded-2xl object-cover"
                 loading="lazy"
               />
             ))}

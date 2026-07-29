@@ -27,14 +27,23 @@ body {
 
 /* ─── Custom Scrollbar ───────────────────────────────────────────────── */
 ::-webkit-scrollbar {
-  width: 4px;
+  width: 6px;
 }
 ::-webkit-scrollbar-track {
   background: #0C0C0C;
 }
 ::-webkit-scrollbar-thumb {
-  background: #B501A7;
-  border-radius: 4px;
+  background: linear-gradient(180deg, #B501A7, #7B3DFF);
+  border-radius: 6px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #D601C8, #9B5DFF);
+}
+
+/* ─── Text Selection ──────────────────────────────────────────────────── */
+::selection {
+  background: rgba(181, 1, 167, 0.4);
+  color: white;
 }
 
 /* ─── Headings ───────────────────────────────────────────────────────── */
@@ -296,8 +305,8 @@ body {
 
 /* Ambient background pulse in contact section */
 @keyframes ambientPulse {
-  0%, 100% { opacity: 0.03; }
-  50% { opacity: 0.07; }
+  0%, 100% { opacity: 0.03; transform: scale(1); }
+  50% { opacity: 0.08; transform: scale(1.1); }
 }
 .contact-ambient {
   animation: ambientPulse 4s ease-in-out infinite;
@@ -323,3 +332,112 @@ body {
   background-clip: text;
   animation: headingShimmer 5s linear infinite;
 }
+
+/* ─── Footer Micro-interactions ──────────────────────────────────────── */
+.footer-social {
+  position: relative;
+  overflow: hidden;
+}
+
+.footer-social::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, rgba(181, 1, 167, 0.3) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  border-radius: inherit;
+}
+
+.footer-social:hover::before {
+  opacity: 1;
+}
+
+/* ─── Global Focus States ─────────────────────────────────────────────── */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid rgba(181, 1, 167, 0.6);
+  outline-offset: 2px;
+}
+
+/* ─── Smooth Page Transitions ─────────────────────────────────────────── */
+main {
+  animation: pageEnter 0.5s ease-out;
+}
+
+@keyframes pageEnter {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ─── Glow Effects ───────────────────────────────────────────────────── */
+.glow-pink {
+  box-shadow: 0 0 20px rgba(181, 1, 167, 0.3);
+}
+
+.glow-purple {
+  box-shadow: 0 0 20px rgba(123, 61, 255, 0.3);
+}
+
+/* ─── Mobile-specific fixes ───────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .hero-heading {
+    letter-spacing: -0.02em;
+  }
+  
+  /* Better touch targets */
+  button, 
+  a {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Prevent horizontal scroll on mobile */
+  body {
+    position: relative;
+  }
+}
+
+/* ─── Reduced Motion ──────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* ─── Contact Section Keyframes ──────────────────────────────────────── */
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes circleDraw {
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes checkDraw {
+  to { stroke-dashoffset: 0; }
+}
+
+/* ─── Contact grid responsive ────────────────────────────────────────── */
+@media (max-width: 640px) {
+  #contact .contact-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+

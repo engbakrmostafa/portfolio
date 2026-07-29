@@ -127,7 +127,7 @@ function App() {
           <SkillsSection skillsData={data?.skills} />
           <ServicesSection servicesData={data?.services} />
           <ProjectsSection projectsData={data?.projects} />
-          <ContactSection />
+          <ContactSection socialsData={data?.socials} />
           <Footer socialsData={data?.socials} userName={data?.hero?.name} />
         </div>
       )}
