@@ -22,6 +22,7 @@ function useTypewriter(text: string, speed = 45) {
   const indexRef = useRef(0);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- reset the animation when the source text changes
     setDisplayed('');
     setDone(false);
     indexRef.current = 0;

@@ -22,20 +22,9 @@ function Counter({ value, suffix = '' }: { value: number; suffix?: string }) {
       animate={inView ? { opacity: 1 } : {}}
       transition={{ duration: 0.5 }}
     >
-      <motion.span
-        initial={{ textContent: '0' }}
-        animate={inView ? { textContent: String(value) } : {}}
-        transition={{ duration: 1.5, ease: 'easeOut' }}
-        onUpdate={(latest) => {
-          if (ref.current) {
-            const num = Math.round(Number(latest.textContent));
-            ref.current.textContent = `${num}${suffix}`;
-          }
-        }}
-        className="font-black text-white text-[clamp(1.8rem,4vw,3rem)] leading-none"
-      >
+      <span className="font-black text-white text-[clamp(1.8rem,4vw,3rem)] leading-none">
         {display}{suffix}
-      </motion.span>
+      </span>
     </motion.span>
   );
 }

@@ -9,11 +9,7 @@ const navLinks = [
   { label: 'Contact', href: '#contact' },
 ];
 
-interface NavbarProps {
-  userName?: string;
-}
-
-export default function Navbar({ userName }: NavbarProps) {
+export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState('');
   const [menuOpen, setMenuOpen] = useState(false);

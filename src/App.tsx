@@ -79,7 +79,7 @@ function App() {
   // Fetch portfolio data from Django API
   useEffect(() => {
     const minLoadTime = new Promise((res) => setTimeout(res, 1400)); // show loading screen min 1.4s
-    const fetchData = fetch('http://127.0.0.1:8000/api/portfolio/')
+    const fetchData = fetch('/api/portfolio/')
       .then((res) => {
         if (!res.ok) throw new Error('API failed');
         return res.json() as Promise<PortfolioData>;
@@ -120,7 +120,7 @@ function App() {
             }}
           />
 
-          <Navbar userName={data?.hero?.name} />
+          <Navbar />
           <HeroSection heroData={data?.hero} setAccentColor={setAccentColor} />
           <MarqueeSection marqueeData={data?.marquee} />
           <AboutSection aboutData={data?.about} />

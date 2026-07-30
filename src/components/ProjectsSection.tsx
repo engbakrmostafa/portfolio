@@ -97,7 +97,8 @@ function ProjectCard({ project, index, totalCards }: { project: ProjectData; ind
   const meta = getCategoryMeta(project.category);
   const fallback = 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=600&q=80';
 
-  let col1a = '', col1b = '';
+  let col1a: string;
+  let col1b: string;
   let col2: React.ReactNode;
   if (videoSrc) {
     col2 = <video src={videoSrc} autoPlay loop muted playsInline style={{ width: '100%', height: '100%', borderRadius: 40, objectFit: 'cover' }} />;
@@ -123,7 +124,6 @@ function ProjectCard({ project, index, totalCards }: { project: ProjectData; ind
           viewport={{ once: true, amount: 0.1 }}
           transition={{ duration: 0.7, ease: [0.25, 0.1, 0.25, 1] }}
           className="sticky top-20 md:top-24"
-          css={undefined}
         >
           <div style={{
             height: 'calc(100vh - 13rem)',
