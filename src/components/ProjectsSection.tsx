@@ -122,19 +122,19 @@ function ProjectCard({ project, index, totalCards }: { project: ProjectData; ind
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.1 }}
           transition={{ duration: 0.7, ease: [0.25, 0.1, 0.25, 1] }}
-          className="sticky top-20 md:top-24"
-          css={undefined}
+          className="sticky top-16 sm:top-20 md:top-24"
         >
           <div style={{
-            height: 'calc(100vh - 13rem)',
+            height: 'clamp(460px, calc(100vh - 10rem), 900px)',
             background: 'rgba(12,12,12,0.92)',
-            borderRadius: 48,
+            borderRadius: 'clamp(20px, 4vw, 48px)',
             border: '1px solid rgba(255,255,255,0.08)',
-            padding: '28px 28px 24px',
+            padding: 'clamp(16px, 2.5vw, 28px)',
             display: 'flex', flexDirection: 'column',
             backdropFilter: 'blur(12px)',
             transition: 'border-color 0.3s, box-shadow 0.3s',
             boxShadow: '0 30px 80px rgba(0,0,0,0.4)',
+            overflow: 'hidden',
           }}
             onMouseEnter={e => {
               (e.currentTarget as HTMLDivElement).style.borderColor = `${meta.color}40`;
@@ -146,47 +146,47 @@ function ProjectCard({ project, index, totalCards }: { project: ProjectData; ind
             }}
           >
             {/* Header */}
-            <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 12 }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-                <span style={{ fontWeight: 900, color: '#fff', fontSize: 'clamp(2rem,6vw,90px)', lineHeight: 1 }}>
+            <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 10, gap: 8, flexWrap: 'wrap' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 'clamp(8px, 2vw, 16px)', minWidth: 0, flex: 1 }}>
+                <span style={{ fontWeight: 900, color: '#fff', fontSize: 'clamp(1.6rem, 5vw, 90px)', lineHeight: 1, flexShrink: 0 }}>
                   {project.number}
                 </span>
-                <div>
+                <div style={{ minWidth: 0, flex: 1 }}>
                   {/* Category badge */}
-                  <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '3px 12px', borderRadius: 999, background: `${meta.color}18`, border: `1px solid ${meta.color}35`, marginBottom: 4 }}>
-                    <span style={{ fontSize: 12 }}>{meta.icon}</span>
-                    <span style={{ color: meta.color, fontSize: 10, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase' }}>
+                  <div style={{ display: 'inline-flex', alignItems: 'center', gap: 5, padding: '3px 10px', borderRadius: 999, background: `${meta.color}18`, border: `1px solid ${meta.color}35`, marginBottom: 4, maxWidth: '100%' }}>
+                    <span style={{ fontSize: 11, flexShrink: 0 }}>{meta.icon}</span>
+                    <span style={{ color: meta.color, fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                       {project.category}
                     </span>
                   </div>
                   {project.live_link ? (
                     <a href={project.live_link} target="_blank" rel="noopener noreferrer"
-                      style={{ display: 'block', color: '#fff', fontSize: 'clamp(0.9rem,2.2vw,1.5rem)', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.08em', textDecoration: 'none', borderBottom: '1px solid transparent', transition: 'all 0.2s' }}
+                      style={{ display: 'block', color: '#fff', fontSize: 'clamp(0.8rem, 2vw, 1.4rem)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em', textDecoration: 'none', borderBottom: '1px solid transparent', transition: 'all 0.2s', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}
                       onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.color = meta.color; (e.currentTarget as HTMLAnchorElement).style.borderBottomColor = meta.color; }}
                       onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.color = '#fff'; (e.currentTarget as HTMLAnchorElement).style.borderBottomColor = 'transparent'; }}
                     >{project.name}</a>
                   ) : (
-                    <h3 style={{ color: '#fff', fontSize: 'clamp(0.9rem,2.2vw,1.5rem)', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.08em', margin: 0 }}>{project.name}</h3>
+                    <h3 style={{ color: '#fff', fontSize: 'clamp(0.8rem, 2vw, 1.4rem)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em', margin: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{project.name}</h3>
                   )}
                   {project.description && (
-                    <p style={{ color: 'rgba(255,255,255,0.38)', fontSize: 12, marginTop: 4, maxWidth: 280, lineHeight: 1.6 }}>{project.description}</p>
+                    <p style={{ color: 'rgba(255,255,255,0.38)', fontSize: 'clamp(11px, 1.2vw, 13px)', marginTop: 3, maxWidth: '100%', lineHeight: 1.5, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{project.description}</p>
                   )}
                 </div>
               </div>
-              <LiveProjectButton href={project.live_link} />
+              <div style={{ flexShrink: 0 }}><LiveProjectButton href={project.live_link} /></div>
             </div>
 
-            {/* Image grid */}
-            <div style={{ flex: 1, display: 'flex', gap: 12, minHeight: 0, marginTop: 8 }}>
-              <div style={{ width: '40%', display: 'flex', flexDirection: 'column', gap: 12 }}>
+            {/* Image grid — stacks on mobile */}
+            <div style={{ flex: 1, display: 'flex', flexDirection: 'row', gap: 10, minHeight: 0, marginTop: 6 }}>
+              <div style={{ width: '38%', display: 'flex', flexDirection: 'column', gap: 10 }}>
                 <img src={col1a || fallback} alt={`${project.name} 1`}
-                  style={{ width: '100%', height: 'clamp(90px,13vw,190px)', borderRadius: 32, objectFit: 'cover', cursor: 'zoom-in' }}
+                  style={{ width: '100%', height: 'clamp(70px, 11vw, 190px)', borderRadius: 'clamp(16px, 3vw, 32px)', objectFit: 'cover', cursor: 'zoom-in', flexShrink: 0 }}
                   onClick={() => project.images.length > 0 && setLightbox({ images: project.images, initial: videoSrc ? 0 : 1 })} />
                 <img src={col1b || fallback} alt={`${project.name} 2`}
-                  style={{ width: '100%', flex: 1, borderRadius: 32, objectFit: 'cover', cursor: 'zoom-in', minHeight: 0 }}
+                  style={{ width: '100%', flex: 1, borderRadius: 'clamp(16px, 3vw, 32px)', objectFit: 'cover', cursor: 'zoom-in', minHeight: 0 }}
                   onClick={() => project.images.length > 0 && setLightbox({ images: project.images, initial: videoSrc ? 1 : 2 })} />
               </div>
-              <div style={{ width: '60%' }}>{col2}</div>
+              <div style={{ flex: 1, minWidth: 0 }}>{col2}</div>
             </div>
           </div>
         </motion.div>
@@ -304,11 +304,11 @@ export default function ProjectsSection({ projectsData }: ProjectsSectionProps) 
   return (
     <section id="projects" style={{
       background: '#0C0C0C',
-      borderRadius: '40px 40px 0 0',
-      marginTop: -40,
+      borderRadius: 'clamp(20px, 5vw, 40px) clamp(20px, 5vw, 40px) 0 0',
+      marginTop: -30,
       position: 'relative',
       zIndex: 20,
-      padding: '80px 20px 100px',
+      padding: 'clamp(48px, 8vw, 80px) clamp(16px, 4vw, 40px) clamp(60px, 10vw, 100px)',
     }}>
       <div style={{ maxWidth: '84rem', margin: '0 auto' }}>
 
