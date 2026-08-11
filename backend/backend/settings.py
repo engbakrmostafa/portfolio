@@ -125,3 +125,15 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 CORS_ALLOW_ALL_ORIGINS = True  # Enable CORS for development React app
 
+# ── Email (Gmail SMTP) ────────────────────────────────────────────────────
+# To send emails you need a Gmail App Password:
+# 1. Go to myaccount.google.com → Security → 2-Step Verification → App passwords
+# 2. Generate a password for "Mail"
+# 3. Paste it below as EMAIL_HOST_PASSWORD
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'body33768@gmail.com'          # your Gmail address
+EMAIL_HOST_PASSWORD = 'your-app-password-here'   # Gmail App Password (16 chars)
+DEFAULT_FROM_EMAIL = 'Portfolio <body33768@gmail.com>'

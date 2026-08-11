@@ -1,27 +1,33 @@
 import { useRef, useState, useMemo } from 'react';
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
-import type { ProjectData } from '../App';
+import type { ProjectData, ProjectCategoryData } from '../App';
 import LiveProjectButton from './LiveProjectButton';
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
-/* ── Category config ────────────────────────────────────────────────── */
-const CATEGORY_META: Record<string, { icon: string; color: string; desc: string }> = {
-  'All':                       { icon: '⬡', color: '#fff',      desc: 'All projects' },
-  'Financial Data Analysis':   { icon: '📊', color: '#10b981',  desc: 'Data & Finance' },
-  'Mobile Development':        { icon: '📱', color: '#3b82f6',  desc: 'Mobile Apps' },
-  'Full Stack Development':    { icon: '🧩', color: '#B501A7',  desc: 'Web & Backend' },
-  'Design':                    { icon: '🎨', color: '#f59e0b',  desc: 'UI/UX & Branding' },
-  'Other':                     { icon: '✦',  color: '#a78bfa',  desc: 'Other work' },
-};
-
-function getCategoryMeta(cat: string) {
-  return CATEGORY_META[cat] ?? { icon: '✦', color: '#B501A7', desc: cat };
+/* ── Fallback meta when no categories from API ───────────────────── */
+function getCategoryMeta(
+  catName: string,
+  categoriesData?: ProjectCategoryData[],
+  project?: ProjectData,
+): { icon: string; color: string } {
+  // 1. Try to find it in the API categories list
+  if (categoriesData) {
+    const found = categoriesData.find(c => c.name === catName);
+    if (found) return { icon: found.icon, color: found.color };
+  }
+  // 2. Use the per-project icon/color from the API
+  if (project) {
+    return { icon: project.category_icon || '✦', color: project.category_color || '#B501A7' };
+  }
+  return { icon: '✦', color: '#B501A7' };
 }
 
 const defaultProjects: ProjectData[] = [
   {
-    number: '01', category: 'Full Stack Development', name: 'Nextlevel Studio',
+    number: '01', category: 'Full Stack Development',
+    category_icon: '🧩', category_color: '#B501A7',
+    name: 'Nextlevel Studio',
     description: 'Full-stack web platform with real-time dashboard and REST API.',
     live_link: 'https://github.com', video_url: null, video_file: null,
     images: [
@@ -31,7 +37,9 @@ const defaultProjects: ProjectData[] = [
     ],
   },
   {
-    number: '02', category: 'Financial Data Analysis', name: 'Market Pulse',
+    number: '02', category: 'Financial Data Analysis',
+    category_icon: '📊', category_color: '#10b981',
+    name: 'Market Pulse',
     description: 'Interactive financial analytics dashboard with live chart visualizations.',
     live_link: 'https://github.com', video_url: null, video_file: null,
     images: [
@@ -41,7 +49,9 @@ const defaultProjects: ProjectData[] = [
     ],
   },
   {
-    number: '03', category: 'Mobile Development', name: 'Solaris App',
+    number: '03', category: 'Mobile Development',
+    category_icon: '📱', category_color: '#3b82f6',
+    name: 'Solaris App',
     description: 'Cross-platform mobile app with Flutter for solar energy monitoring.',
     live_link: 'https://github.com', video_url: null, video_file: null,
     images: [
@@ -86,7 +96,10 @@ function Lightbox({ images, initial, onClose }: { images: string[]; initial: num
 }
 
 /* ── Project Card ───────────────────────────────────────────────────── */
-function ProjectCard({ project, index, totalCards }: { project: ProjectData; index: number; totalCards: number }) {
+function ProjectCard({ project, index, totalCards, categoriesData }: {
+  project: ProjectData; index: number; totalCards: number;
+  categoriesData?: ProjectCategoryData[];
+}) {
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: containerRef, offset: ['start end', 'end start'] });
   const targetScale = 1 - (totalCards - 1 - index) * 0.03;
@@ -94,7 +107,7 @@ function ProjectCard({ project, index, totalCards }: { project: ProjectData; ind
 
   const videoSrc = project.video_file || project.video_url;
   const [lightbox, setLightbox] = useState<{ images: string[]; initial: number } | null>(null);
-  const meta = getCategoryMeta(project.category);
+  const meta = getCategoryMeta(project.category, categoriesData, project);
   const fallback = 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=600&q=80';
 
   let col1a = '', col1b = '';
@@ -202,53 +215,64 @@ function ProjectCard({ project, index, totalCards }: { project: ProjectData; ind
 /* ── Category Filter Bar ────────────────────────────────────────────── */
 function CategoryTabs({
   categories, active, onChange,
-}: { categories: string[]; active: string; onChange: (c: string) => void }) {
-  const tabs = ['All', ...categories];
+}: { categories: ProjectCategoryData[]; active: string; onChange: (c: string) => void }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.6, ease }}
-      style={{ display: 'flex', flexWrap: 'wrap', gap: 10, justifyContent: 'center', marginBottom: 56 }}
+      style={{ display: 'flex', flexWrap: 'wrap', gap: 10, justifyContent: 'center', marginBottom: 48 }}
     >
-      {tabs.map((tab, i) => {
-        const meta = getCategoryMeta(tab);
+      {/* All tab */}
+      {(['All'] as const).map(tab => {
         const isActive = active === tab;
         return (
-          <motion.button
-            key={tab}
-            onClick={() => onChange(tab)}
-            initial={{ opacity: 0, scale: 0.85 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ delay: i * 0.07, duration: 0.4 }}
-            whileHover={{ y: -3, scale: 1.05 }}
-            whileTap={{ scale: 0.97 }}
+          <motion.button key={tab} onClick={() => onChange(tab)}
+            whileHover={{ y: -3, scale: 1.05 }} whileTap={{ scale: 0.97 }}
             style={{
               display: 'inline-flex', alignItems: 'center', gap: 8,
               padding: '10px 22px', borderRadius: 999,
-              border: isActive ? `1.5px solid ${meta.color}` : '1.5px solid rgba(255,255,255,0.1)',
-              background: isActive ? `${meta.color}18` : 'rgba(255,255,255,0.03)',
-              color: isActive ? meta.color : 'rgba(255,255,255,0.5)',
+              border: isActive ? '1.5px solid #fff' : '1.5px solid rgba(255,255,255,0.1)',
+              background: isActive ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.03)',
+              color: isActive ? '#fff' : 'rgba(255,255,255,0.5)',
               fontSize: 13, fontWeight: isActive ? 700 : 500,
-              letterSpacing: '0.04em', cursor: 'pointer',
-              fontFamily: 'Kanit, sans-serif',
-              boxShadow: isActive ? `0 0 20px ${meta.color}25, 0 8px 30px rgba(0,0,0,0.2)` : 'none',
+              cursor: 'pointer', fontFamily: 'Kanit, sans-serif',
+              boxShadow: isActive ? '0 0 20px rgba(255,255,255,0.1)' : 'none',
               transition: 'all 0.25s ease',
-              position: 'relative',
             }}
           >
-            {/* active indicator dot */}
-            {isActive && (
-              <motion.span
-                layoutId="active-cat-dot"
-                style={{ width: 6, height: 6, borderRadius: '50%', background: meta.color, display: 'inline-block', boxShadow: `0 0 8px ${meta.color}` }}
-              />
-            )}
-            <span style={{ fontSize: 15 }}>{meta.icon}</span>
-            {tab}
-            {/* count badge */}
+            {isActive && <motion.span layoutId="active-cat-dot" style={{ width: 6, height: 6, borderRadius: '50%', background: '#fff', display: 'inline-block' }} />}
+            <span>⬡</span> {tab}
+          </motion.button>
+        );
+      })}
+
+      {/* Dynamic category tabs from Admin */}
+      {categories.map((cat, i) => {
+        const isActive = active === cat.name;
+        return (
+          <motion.button key={cat.id} onClick={() => onChange(cat.name)}
+            initial={{ opacity: 0, scale: 0.85 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ delay: i * 0.07 }}
+            whileHover={{ y: -3, scale: 1.05 }} whileTap={{ scale: 0.97 }}
+            style={{
+              display: 'inline-flex', alignItems: 'center', gap: 8,
+              padding: '10px 22px', borderRadius: 999,
+              border: isActive ? `1.5px solid ${cat.color}` : '1.5px solid rgba(255,255,255,0.1)',
+              background: isActive ? `${cat.color}18` : 'rgba(255,255,255,0.03)',
+              color: isActive ? cat.color : 'rgba(255,255,255,0.5)',
+              fontSize: 13, fontWeight: isActive ? 700 : 500,
+              cursor: 'pointer', fontFamily: 'Kanit, sans-serif',
+              boxShadow: isActive ? `0 0 20px ${cat.color}25` : 'none',
+              transition: 'all 0.25s ease',
+            }}
+          >
+            {isActive && <motion.span layoutId="active-cat-dot" style={{ width: 6, height: 6, borderRadius: '50%', background: cat.color, display: 'inline-block', boxShadow: `0 0 8px ${cat.color}` }} />}
+            <span style={{ fontSize: 15 }}>{cat.icon}</span>
+            {cat.name}
           </motion.button>
         );
       })}
@@ -257,14 +281,12 @@ function CategoryTabs({
 }
 
 /* ── Empty state ────────────────────────────────────────────────────── */
-function EmptyState({ category }: { category: string }) {
-  const meta = getCategoryMeta(category);
+function EmptyState({ category, categoriesData }: { category: string; categoriesData?: ProjectCategoryData[] }) {
+  const meta = getCategoryMeta(category, categoriesData);
   return (
     <motion.div
-      initial={{ opacity: 0, scale: 0.9 }}
-      animate={{ opacity: 1, scale: 1 }}
-      exit={{ opacity: 0, scale: 0.9 }}
-      transition={{ duration: 0.4, ease }}
+      initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.9 }} transition={{ duration: 0.4, ease }}
       style={{ textAlign: 'center', padding: '80px 20px' }}
     >
       <div style={{ fontSize: 48, marginBottom: 16 }}>{meta.icon}</div>
@@ -283,19 +305,28 @@ function EmptyState({ category }: { category: string }) {
 ══════════════════════════════════════════════════════════════════════ */
 interface ProjectsSectionProps {
   projectsData?: ProjectData[];
+  categoriesData?: ProjectCategoryData[];
 }
 
-export default function ProjectsSection({ projectsData }: ProjectsSectionProps) {
+export default function ProjectsSection({ projectsData, categoriesData }: ProjectsSectionProps) {
   const allProjects = projectsData && projectsData.length > 0 ? projectsData : defaultProjects;
   const [activeCategory, setActiveCategory] = useState('All');
 
-  // Derive unique categories from actual data
-  const categories = useMemo(() => {
-    const cats = [...new Set(allProjects.map(p => p.category))].filter(Boolean);
+  // Use API categories if available, else derive from project data
+  const categories: ProjectCategoryData[] = useMemo(() => {
+    if (categoriesData && categoriesData.length > 0) return categoriesData;
+    // Fallback: build from project fields
+    const seen = new Set<string>();
+    const cats: ProjectCategoryData[] = [];
+    allProjects.forEach((p, i) => {
+      if (p.category && !seen.has(p.category)) {
+        seen.add(p.category);
+        cats.push({ id: i, name: p.category, icon: p.category_icon || '✦', color: p.category_color || '#B501A7', order: i });
+      }
+    });
     return cats;
-  }, [allProjects]);
+  }, [categoriesData, allProjects]);
 
-  // Filtered list
   const filtered = useMemo(() => {
     if (activeCategory === 'All') return allProjects;
     return allProjects.filter(p => p.category === activeCategory);
@@ -312,7 +343,7 @@ export default function ProjectsSection({ projectsData }: ProjectsSectionProps) 
     }}>
       <div style={{ maxWidth: '84rem', margin: '0 auto' }}>
 
-        {/* ── Title ── */}
+        {/* Title */}
         <motion.div
           initial={{ opacity: 0, y: 60 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -329,8 +360,8 @@ export default function ProjectsSection({ projectsData }: ProjectsSectionProps) 
           </h2>
         </motion.div>
 
-        {/* ── Category tabs ── */}
-        {categories.length > 1 && (
+        {/* Category filter tabs — fully dynamic from Django Admin */}
+        {categories.length > 0 && (
           <CategoryTabs
             categories={categories}
             active={activeCategory}
@@ -338,7 +369,7 @@ export default function ProjectsSection({ projectsData }: ProjectsSectionProps) 
           />
         )}
 
-        {/* ── Stats row ── */}
+        {/* Stats row */}
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
@@ -347,50 +378,42 @@ export default function ProjectsSection({ projectsData }: ProjectsSectionProps) 
           style={{ display: 'flex', justifyContent: 'center', gap: 32, marginBottom: 48, flexWrap: 'wrap' }}
         >
           {categories.map(cat => {
-            const count = allProjects.filter(p => p.category === cat).length;
-            const meta = getCategoryMeta(cat);
+            const count = allProjects.filter(p => p.category === cat.name).length;
             return (
-              <motion.button
-                key={cat}
-                onClick={() => setActiveCategory(activeCategory === cat ? 'All' : cat)}
+              <motion.button key={cat.id}
+                onClick={() => setActiveCategory(activeCategory === cat.name ? 'All' : cat.name)}
                 whileHover={{ y: -2 }}
                 style={{
                   display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4,
                   background: 'none', border: 'none', cursor: 'pointer',
-                  opacity: activeCategory === 'All' || activeCategory === cat ? 1 : 0.35,
+                  opacity: activeCategory === 'All' || activeCategory === cat.name ? 1 : 0.35,
                   transition: 'opacity 0.3s',
                 }}
               >
-                <span style={{
-                  fontSize: 28, fontWeight: 900, color: meta.color,
-                  textShadow: `0 0 20px ${meta.color}50`,
-                }}>{count}</span>
+                <span style={{ fontSize: 28, fontWeight: 900, color: cat.color, textShadow: `0 0 20px ${cat.color}50` }}>{count}</span>
                 <span style={{ color: 'rgba(255,255,255,0.4)', fontSize: 11, letterSpacing: '0.1em', textTransform: 'uppercase' }}>
-                  {meta.icon} {cat}
+                  {cat.icon} {cat.name}
                 </span>
               </motion.button>
             );
           })}
         </motion.div>
 
-        {/* ── Project cards ── */}
+        {/* Project cards */}
         <AnimatePresence mode="wait">
           <motion.div
             key={activeCategory}
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.45, ease }}
+            initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.45, ease }}
           >
             {filtered.length === 0 ? (
-              <EmptyState category={activeCategory} />
+              <EmptyState category={activeCategory} categoriesData={categories} />
             ) : (
               filtered.map((project, i) => (
                 <ProjectCard
                   key={`${activeCategory}-${project.number}`}
-                  project={project}
-                  index={i}
-                  totalCards={filtered.length}
+                  project={project} index={i} totalCards={filtered.length}
+                  categoriesData={categoriesData}
                 />
               ))
             )}

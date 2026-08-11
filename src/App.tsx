@@ -44,9 +44,19 @@ export interface SkillData {
   level: number;
 }
 
+export interface ProjectCategoryData {
+  id: number;
+  name: string;
+  icon: string;
+  color: string;
+  order: number;
+}
+
 export interface ProjectData {
   number: string;
   category: string;
+  category_icon: string;
+  category_color: string;
   name: string;
   description: string;
   live_link: string | null;
@@ -67,6 +77,7 @@ export interface PortfolioData {
   skills: SkillData[];
   marquee: string[];
   socials: SocialData[];
+  project_categories: ProjectCategoryData[];
   projects: ProjectData[];
 }
 
@@ -126,7 +137,7 @@ function App() {
           <AboutSection aboutData={data?.about} />
           <SkillsSection skillsData={data?.skills} />
           <ServicesSection servicesData={data?.services} />
-          <ProjectsSection projectsData={data?.projects} />
+          <ProjectsSection projectsData={data?.projects} categoriesData={data?.project_categories} />
           <ContactSection socialsData={data?.socials} />
           <Footer socialsData={data?.socials} userName={data?.hero?.name} />
         </div>
