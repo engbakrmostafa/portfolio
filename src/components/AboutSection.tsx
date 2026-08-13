@@ -1,5 +1,4 @@
-import { useRef } from 'react';
-import { motion, useInView } from 'framer-motion';
+import { motion } from 'framer-motion';
 import FadeIn from './FadeIn';
 import AnimatedText from './AnimatedText';
 import Magnet from './Magnet';
@@ -11,31 +10,15 @@ interface AboutSectionProps {
 
 // Animated counter
 function Counter({ value, suffix = '' }: { value: number; suffix?: string }) {
-  const ref = useRef<HTMLSpanElement>(null);
-  const inView = useInView(ref, { once: true });
-  const display = inView ? value : 0;
-
   return (
     <motion.span
-      ref={ref}
-      initial={{ opacity: 0 }}
-      animate={inView ? { opacity: 1 } : {}}
+      initial={{ opacity: 0, y: 8 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
       transition={{ duration: 0.5 }}
+      className="font-black text-white text-[clamp(1.8rem,4vw,3rem)] leading-none"
     >
-      <motion.span
-        initial={{ textContent: '0' }}
-        animate={inView ? { textContent: String(value) } : {}}
-        transition={{ duration: 1.5, ease: 'easeOut' }}
-        onUpdate={(latest) => {
-          if (ref.current) {
-            const num = Math.round(Number(latest.textContent));
-            ref.current.textContent = `${num}${suffix}`;
-          }
-        }}
-        className="font-black text-white text-[clamp(1.8rem,4vw,3rem)] leading-none"
-      >
-        {display}{suffix}
-      </motion.span>
+      {value}{suffix}
     </motion.span>
   );
 }

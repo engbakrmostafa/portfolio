@@ -14,6 +14,7 @@ interface NavbarProps {
 }
 
 export default function Navbar({ userName }: NavbarProps) {
+  void userName;
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState('');
   const [menuOpen, setMenuOpen] = useState(false);
