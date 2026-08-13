@@ -25,7 +25,7 @@ const defaultServices = [
     number: '04',
     name: 'Branding',
     description:
-      "Crafting cohesive visual identities -- from logos to full brand systems -- that communicate a clear and memorable presence.",
+      'Crafting cohesive visual identities — from logos to full brand systems — that communicate a clear and memorable presence.',
   },
   {
     number: '05',
@@ -45,32 +45,142 @@ export default function ServicesSection({ servicesData }: ServicesSectionProps) 
   return (
     <section
       id="price"
-      className="bg-[#0C0C0C] px-5 sm:px-8 md:px-10 py-24 sm:py-32 relative z-10"
+      style={{
+        background: '#0C0C0C',
+        padding: 'clamp(60px, 10vw, 120px) clamp(16px, 5vw, 48px)',
+        position: 'relative',
+        zIndex: 10,
+        /* prevent any child from breaking out */
+        overflow: 'hidden',
+      }}
     >
-      <h2 className="hero-heading font-black uppercase text-center text-[clamp(3rem,12vw,160px)] mb-16 sm:mb-24">
+      {/* Title */}
+      <h2
+        className="hero-heading"
+        style={{
+          fontWeight: 900,
+          textTransform: 'uppercase',
+          textAlign: 'center',
+          fontSize: 'clamp(2.8rem, 12vw, 160px)',
+          lineHeight: 0.9,
+          marginBottom: 'clamp(40px, 8vw, 80px)',
+          wordBreak: 'break-word',
+        }}
+      >
         Services
       </h2>
 
-      <div className="max-w-5xl mx-auto flex flex-col gap-6">
+      {/* Cards */}
+      <div
+        style={{
+          maxWidth: 900,
+          margin: '0 auto',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 14,
+        }}
+      >
         {displayServices.map((service, index) => (
-          <FadeIn key={service.number} delay={index * 0.08} y={35}>
+          <FadeIn key={service.number} delay={index * 0.07} y={30}>
             <motion.div
-              whileHover={{ scale: 1.015, y: -4 }}
-              transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-              className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 p-6 sm:p-8 rounded-[30px] border border-white/5 bg-white/5 backdrop-blur-md hover:border-[#B501A7]/40 hover:bg-white/[0.07] hover:shadow-[0_10px_30px_rgba(181,1,167,0.1)] transition-all duration-300 group cursor-pointer"
+              whileHover={{ scale: 1.012, y: -3 }}
+              transition={{ type: 'spring', stiffness: 300, damping: 22 }}
+              style={{
+                display: 'flex',
+                flexDirection: 'column',   /* always column — safe on all widths */
+                gap: 10,
+                padding: 'clamp(16px, 3vw, 28px)',
+                borderRadius: 24,
+                border: '1px solid rgba(255,255,255,0.07)',
+                background: 'rgba(255,255,255,0.04)',
+                backdropFilter: 'blur(10px)',
+                cursor: 'pointer',
+                overflow: 'hidden',         /* hard stop — nothing escapes */
+                width: '100%',
+                boxSizing: 'border-box',
+                transition: 'border-color 0.3s, box-shadow 0.3s, background 0.3s',
+              }}
+              onHoverStart={e => {
+                (e.target as HTMLElement).closest('[data-svc]' as string)?.setAttribute('style', '');
+              }}
             >
-              {/* Left Side: Number & Name */}
-              <div className="flex items-center gap-6 sm:gap-10">
-                <span className="service-number font-black text-[clamp(2rem,6vw,80px)] leading-none">
+              {/* Top row: number + name */}
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 'clamp(8px, 2vw, 20px)',
+                  width: '100%',
+                  overflow: 'hidden',
+                }}
+              >
+                {/* Number */}
+                <span
+                  style={{
+                    fontWeight: 900,
+                    fontSize: 'clamp(2rem, 8vw, 72px)',
+                    lineHeight: 1,
+                    color: 'rgba(255,255,255,0.18)',
+                    flexShrink: 0,
+                    letterSpacing: '-0.02em',
+                  }}
+                >
                   {service.number}
                 </span>
-                <h3 className="service-title font-semibold uppercase text-lg sm:text-xl md:text-2xl group-hover:translate-x-1">
+
+                {/* Divider */}
+                <div
+                  style={{
+                    width: 1,
+                    height: 'clamp(28px, 5vw, 48px)',
+                    background: 'rgba(255,255,255,0.1)',
+                    flexShrink: 0,
+                  }}
+                />
+
+                {/* Name */}
+                <h3
+                  style={{
+                    color: '#fff',
+                    fontWeight: 700,
+                    fontSize: 'clamp(0.95rem, 2.5vw, 1.4rem)',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.06em',
+                    margin: 0,
+                    wordBreak: 'break-word',
+                    overflowWrap: 'anywhere',
+                    flex: 1,
+                    minWidth: 0,
+                  }}
+                >
                   {service.name}
                 </h3>
+
+                {/* Arrow icon */}
+                <span
+                  style={{
+                    color: 'rgba(181,1,167,0.5)',
+                    fontSize: 'clamp(14px, 2vw, 20px)',
+                    flexShrink: 0,
+                  }}
+                >
+                  ↗
+                </span>
               </div>
 
-              {/* Right Side: Description */}
-              <p className="service-desc font-light leading-relaxed max-w-2xl text-sm sm:text-base md:text-lg md:text-right">
+              {/* Description — always below, always contained */}
+              <p
+                style={{
+                  color: 'rgba(255,255,255,0.45)',
+                  fontSize: 'clamp(13px, 1.6vw, 16px)',
+                  lineHeight: 1.7,
+                  margin: 0,
+                  paddingLeft: 'clamp(0px, 1vw, 8px)',
+                  wordBreak: 'break-word',
+                  overflowWrap: 'anywhere',
+                  width: '100%',
+                }}
+              >
                 {service.description}
               </p>
             </motion.div>

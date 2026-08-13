@@ -22,7 +22,6 @@ function useTypewriter(text: string, speed = 45) {
   const indexRef = useRef(0);
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- reset the animation when the source text changes
     setDisplayed('');
     setDone(false);
     indexRef.current = 0;
@@ -73,16 +72,16 @@ export default function HeroSection({ heroData, setAccentColor }: HeroSectionPro
   };
 
   return (
-    <section className="min-h-[100svh] flex flex-col justify-center items-center overflow-x-hidden relative noise-overlay px-4 pt-24 pb-8">
+    <section className="h-screen flex flex-col justify-center items-center overflow-hidden relative noise-overlay">
       {/* ── Heading ──────────────────────────────────────────────── */}
       <motion.div
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7, delay: 0.15, ease: [0.25, 0.1, 0.25, 1] }}
-        className="w-full overflow-hidden z-10"
+        className="overflow-hidden px-4 z-10"
       >
         <h1
-          className="hero-heading font-black uppercase tracking-tight leading-[0.9] w-full text-[clamp(2.75rem,10vw,10rem)] text-center"
+          className="hero-heading font-black uppercase tracking-tight leading-none w-full text-[9vw] sm:text-[10vw] md:text-[11vw] lg:text-[12vw] text-center"
           style={{ background: selectedTheme.value, WebkitBackgroundClip: 'text', backgroundClip: 'text' }}
         >
           Hi, i&apos;m {name}
@@ -94,7 +93,7 @@ export default function HeroSection({ heroData, setAccentColor }: HeroSectionPro
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.8 }}
-        className="relative z-20 text-center px-4 mt-3"
+        className="relative z-20 text-center px-6 mt-4"
       >
         <p className="text-white/50 text-sm sm:text-base font-light tracking-wide max-w-md mx-auto">
           {displayed}
@@ -107,7 +106,7 @@ export default function HeroSection({ heroData, setAccentColor }: HeroSectionPro
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 1.1, duration: 0.5 }}
-        className="relative z-20 flex items-center justify-center gap-3 mt-4"
+        className="relative z-20 flex items-center justify-center gap-3 mt-5"
       >
         {themeOptions.map((t) => (
           <button
@@ -129,7 +128,7 @@ export default function HeroSection({ heroData, setAccentColor }: HeroSectionPro
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7, delay: 0.6, ease: [0.25, 0.1, 0.25, 1] }}
-        className="relative z-10 w-[180px] sm:w-[220px] md:w-[260px] lg:w-[300px] mt-5 flex-shrink-0"
+        className="absolute left-1/2 -translate-x-1/2 z-10 w-[260px] sm:w-[340px] md:w-[420px] lg:w-[500px] bottom-0"
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
       >
@@ -141,7 +140,7 @@ export default function HeroSection({ heroData, setAccentColor }: HeroSectionPro
             <img
               src={portraitUrl}
               alt={`${name} Portrait`}
-              className="w-full max-h-[32svh] object-contain cursor-pointer drop-shadow-[0_15px_30px_rgba(255,255,255,0.05)] transition-shadow duration-300 hover:drop-shadow-[0_20px_50px_rgba(255,255,255,0.15)]"
+              className="w-full h-auto cursor-pointer drop-shadow-[0_15px_30px_rgba(255,255,255,0.05)] transition-shadow duration-300 hover:drop-shadow-[0_20px_50px_rgba(255,255,255,0.15)]"
             />
           </motion.div>
         </Magnet>
@@ -152,7 +151,7 @@ export default function HeroSection({ heroData, setAccentColor }: HeroSectionPro
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.6 }}
-        className="scroll-arrow relative z-20 flex flex-col items-center gap-1 mt-4"
+        className="scroll-arrow absolute bottom-8 left-1/2 z-20 flex flex-col items-center gap-1"
       >
         <span className="text-white/30 text-[10px] font-semibold uppercase tracking-widest">Scroll</span>
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" className="text-white/30">

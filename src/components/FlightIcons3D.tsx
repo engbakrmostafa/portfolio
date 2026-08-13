@@ -1,13 +1,8 @@
-import { useMemo } from 'react';
-import { Canvas, useLoader } from '@react-three/fiber';
+import { useRef, useMemo } from 'react';
+import { Canvas, useFrame, useLoader } from '@react-three/fiber';
 import { Float, Preload, Billboard } from '@react-three/drei';
 import * as THREE from 'three';
 import type { SkillData } from '../App';
-
-function seededRandom(seed: number) {
-  const value = Math.sin(seed) * 10000;
-  return value - Math.floor(value);
-}
 
 function FloatingIcon({ 
   url, 
@@ -22,12 +17,7 @@ function FloatingIcon({
 }) {
   // Use a fallback transparent texture if URL fails, but try to load first
   const texture = useLoader(THREE.TextureLoader, url);
-  const colorTexture = useMemo(() => {
-    const clonedTexture = texture.clone();
-    clonedTexture.colorSpace = THREE.SRGBColorSpace;
-    clonedTexture.needsUpdate = true;
-    return clonedTexture;
-  }, [texture]);
+  texture.colorSpace = THREE.SRGBColorSpace;
 
   return (
     <Float 
@@ -39,7 +29,7 @@ function FloatingIcon({
       <Billboard>
         <mesh>
           <planeGeometry args={[2.5, 2.5]} />
-          <meshBasicMaterial map={colorTexture} transparent={true} side={THREE.DoubleSide} />
+          <meshBasicMaterial map={texture} transparent={true} side={THREE.DoubleSide} />
         </mesh>
       </Billboard>
     </Float>
@@ -48,24 +38,22 @@ function FloatingIcon({
 
 export default function FlightIcons3D({ skills }: { skills: SkillData[] }) {
   // Only use skills that have an uploaded icon_image
-  const validSkills = useMemo(() => skills.filter((s) => s.icon_image), [skills]);
+  const validSkills = skills.filter((s) => s.icon_image);
 
   // Generate random positions for the initial scatter
   const iconProps = useMemo(() => {
-    return validSkills.map((skill, index) => {
-      const seed = [...skill.name].reduce((total, char) => total + char.charCodeAt(0), index + 1);
-      return {
-        url: skill.icon_image as string,
-        name: skill.name,
-        position: [
-          (seededRandom(seed) - 0.5) * 15,
-          (seededRandom(seed + 1) - 0.5) * 8,
-          (seededRandom(seed + 2) - 0.5) * 5 - 2,
-        ] as [number, number, number],
-        speed: 1 + seededRandom(seed + 3) * 1.5,
-        rotation: 0.5 + seededRandom(seed + 4),
-      };
-    });
+    return validSkills.map((skill) => ({
+      url: skill.icon_image as string,
+      name: skill.name,
+      // Random position in a spherical volume
+      position: [
+        (Math.random() - 0.5) * 15,
+        (Math.random() - 0.5) * 8,
+        (Math.random() - 0.5) * 5 - 2, // Push slightly back so they don't clip near camera
+      ] as [number, number, number],
+      speed: 1 + Math.random() * 1.5,
+      rotation: 0.5 + Math.random(),
+    }));
   }, [validSkills]);
 
   if (validSkills.length === 0) {

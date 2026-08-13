@@ -1,7 +1,9 @@
 from django.contrib import admin
+from django.utils.html import format_html
 from .models import (
-    HeroSettings, AboutSettings, Service, Project, ProjectImage,
-    Skill, MarqueeItem, SocialLink, ContactMessage
+    HeroSettings, AboutSettings, Service,
+    ProjectCategory, Project, ProjectImage,
+    Skill, MarqueeItem, SocialLink, ContactMessage, SiteSettings
 )
 
 
@@ -38,6 +40,33 @@ class ServiceAdmin(admin.ModelAdmin):
     search_fields = ('name', 'description')
 
 
+@admin.register(ProjectCategory)
+class ProjectCategoryAdmin(admin.ModelAdmin):
+    list_display = ('color_preview', 'icon', 'name', 'project_count', 'order')
+    list_editable = ('icon', 'name', 'order')
+    ordering = ('order', 'name')
+    search_fields = ('name',)
+    fieldsets = (
+        ('Category Details', {
+            'fields': ('name', 'icon', 'color', 'order'),
+            'description': '💡 Tip: Use a single emoji for the icon (e.g. 📊 📱 🎨 🧩). Pick any hex color.'
+        }),
+    )
+
+    def color_preview(self, obj):
+        return format_html(
+            '<span style="display:inline-block;width:18px;height:18px;border-radius:50%;'
+            'background:{};border:2px solid rgba(0,0,0,0.15);vertical-align:middle;"></span>',
+            obj.color
+        )
+    color_preview.short_description = 'Color'
+
+    def project_count(self, obj):
+        count = obj.projects.count()
+        return format_html('<strong>{}</strong> project{}', count, 's' if count != 1 else '')
+    project_count.short_description = 'Projects'
+
+
 class ProjectImageInline(admin.TabularInline):
     model = ProjectImage
     extra = 3
@@ -45,16 +74,25 @@ class ProjectImageInline(admin.TabularInline):
 
 @admin.register(Project)
 class ProjectAdmin(admin.ModelAdmin):
-    list_display = ('number', 'name', 'category', 'order', 'live_link')
+    list_display = ('number', 'name', 'get_category', 'order', 'live_link')
     list_editable = ('order',)
     list_filter = ('category',)
-    search_fields = ('name', 'description', 'category')
+    search_fields = ('name', 'description', 'category__name')
     inlines = [ProjectImageInline]
     ordering = ('order', 'number')
     fieldsets = (
         ('Project Info', {'fields': ('number', 'name', 'category', 'description', 'order')}),
         ('Links', {'fields': ('live_link', 'video_url', 'video_file')}),
     )
+
+    def get_category(self, obj):
+        if obj.category:
+            return format_html(
+                '<span style="color:{};font-weight:600;">{} {}</span>',
+                obj.category.color, obj.category.icon, obj.category.name
+            )
+        return '—'
+    get_category.short_description = 'Category'
 
 
 @admin.register(Skill)
@@ -92,3 +130,31 @@ class ContactMessageAdmin(admin.ModelAdmin):
     search_fields = ('name', 'email', 'subject', 'message')
     readonly_fields = ('name', 'email', 'subject', 'message', 'created_at')
     ordering = ('-created_at',)
+
+
+@admin.register(SiteSettings)
+class SiteSettingsAdmin(admin.ModelAdmin):
+    list_display = ('notification_email_display', 'email_sender_name')
+    fieldsets = (
+        ('📧 Email Notifications', {
+            'fields': ('notification_email', 'email_sender_name'),
+            'description': (
+                '💡 Every new contact form submission will be emailed to the address above. '
+                'Change it here anytime — no code changes needed.<br><br>'
+                '⚠️ Make sure EMAIL_HOST_PASSWORD in settings.py is set to your Gmail App Password.'
+            ),
+        }),
+    )
+
+    def notification_email_display(self, obj):
+        return format_html(
+            '<strong style="color:#B501A7;">{}</strong>', obj.notification_email
+        )
+    notification_email_display.short_description = 'Notification Email'
+
+    def has_add_permission(self, request):
+        return not SiteSettings.objects.exists()
+
+    def has_delete_permission(self, request, obj=None):
+        return False  # Prevent accidental deletion of the singleton
+

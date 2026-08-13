@@ -44,7 +44,7 @@ export default function LoadingScreen({ name }: LoadingScreenProps) {
             </defs>
           </motion.svg>
           <span className="font-black text-white text-xl uppercase">
-            {(name || 'Abdelrhaman').charAt(0)}
+            {(name || 'A').charAt(0)}
           </span>
         </div>
 
@@ -53,7 +53,7 @@ export default function LoadingScreen({ name }: LoadingScreenProps) {
           transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
           className="font-black uppercase tracking-[0.3em] text-white text-sm"
         >
-          {name || 'Abdelrhaman'}
+          {name || 'Portfolio'}
         </motion.p>
       </motion.div>
 

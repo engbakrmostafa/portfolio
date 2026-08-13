@@ -66,22 +66,39 @@ class Service(models.Model):
         return f"{self.number} - {self.name}"
 
 
-PROJECT_CATEGORY_CHOICES = [
-    ('Financial Data Analysis', 'Financial Data Analysis'),
-    ('Mobile Development', 'Mobile Development'),
-    ('Full Stack Development', 'Full Stack Development'),
-    ('Design', 'Design'),
-    ('Other', 'Other'),
-]
+class ProjectCategory(models.Model):
+    """Fully manageable project categories — create/edit/delete from Admin panel."""
+    name = models.CharField(
+        max_length=100, unique=True,
+        help_text="Category name shown on the website (e.g. 'Client', 'Personal', 'Mobile Dev')"
+    )
+    icon = models.CharField(
+        max_length=10, default='✦',
+        help_text="Emoji icon shown on the filter tab (e.g. 📊, 📱, 🎨)"
+    )
+    color = models.CharField(
+        max_length=20, default='#B501A7',
+        help_text="Accent hex color for this category (e.g. #10b981)"
+    )
+    order = models.IntegerField(default=0, help_text="Display order in filter tabs")
+
+    class Meta:
+        ordering = ['order', 'name']
+        verbose_name = 'Project Category'
+        verbose_name_plural = 'Project Categories'
+
+    def __str__(self):
+        return f"{self.icon} {self.name}"
 
 
 class Project(models.Model):
     number = models.CharField(max_length=10, help_text="e.g. 01, 02")
-    category = models.CharField(
-        max_length=100,
-        choices=PROJECT_CATEGORY_CHOICES,
-        default='Other',
-        help_text="Project category for filtering on the portfolio"
+    category = models.ForeignKey(
+        ProjectCategory,
+        on_delete=models.SET_NULL,
+        null=True, blank=True,
+        related_name='projects',
+        help_text="Select a category (manage categories in 'Project Categories')"
     )
     name = models.CharField(max_length=200)
     description = models.TextField(blank=True, default="", help_text="Short project description")
@@ -100,7 +117,8 @@ class Project(models.Model):
         ordering = ['order', 'number']
 
     def __str__(self):
-        return f"{self.number} - {self.name}"
+        cat = self.category.name if self.category else 'Uncategorized'
+        return f"{self.number} - {self.name} [{cat}]"
 
 
 class ProjectImage(models.Model):
@@ -197,3 +215,34 @@ class ContactMessage(models.Model):
 
     def __str__(self):
         return f"Message from {self.name} ({self.email}) — {self.created_at.strftime('%Y-%m-%d %H:%M')}"
+
+
+class SiteSettings(models.Model):
+    """Singleton model — only one row. Manage from Admin panel."""
+    notification_email = models.EmailField(
+        default='body33768@gmail.com',
+        help_text="Every new contact message will be emailed to this address."
+    )
+    email_sender_name = models.CharField(
+        max_length=100, default='Portfolio Contact Form',
+        help_text="The 'From' name shown in the notification email."
+    )
+
+    class Meta:
+        verbose_name = "Site Settings"
+        verbose_name_plural = "Site Settings"
+
+    def __str__(self):
+        return f"Site Settings (notify → {self.notification_email})"
+
+    def save(self, *args, **kwargs):
+        # Singleton: always reuse the first row
+        if not self.pk and SiteSettings.objects.exists():
+            self.pk = SiteSettings.objects.first().pk
+        super().save(*args, **kwargs)
+
+    @classmethod
+    def get(cls):
+        obj, _ = cls.objects.get_or_create(pk=1)
+        return obj
+
