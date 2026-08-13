@@ -201,7 +201,7 @@ def contact_form(request):
             <hr style="border:none;border-top:1px solid rgba(255,255,255,0.08);margin:18px 0;">
             <p style="color:rgba(255,255,255,0.5);font-size:12px;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px;">Message</p>
             <p style="background:rgba(255,255,255,0.05);padding:16px;border-radius:8px;line-height:1.7;white-space:pre-wrap;">{message}</p>
-            <a href="mailto:{email}?subject=Re: {subject or 'Your message'}" 
+            <a href="mailto:{email}?subject=Re: {subject or 'Your message'}"
                style="display:inline-block;margin-top:20px;padding:12px 28px;background:linear-gradient(135deg,#B501A7,#7B3DFF);color:#fff;text-decoration:none;border-radius:8px;font-weight:600;font-size:14px;">
               &#8617; Reply to {name}
             </a>
@@ -227,4 +227,3 @@ def contact_form(request):
         logger.warning(f"Email notification failed: {exc}")
 
     return JsonResponse({"success": True, "detail": "Message received! I'll get back to you soon."})
-
