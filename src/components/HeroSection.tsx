@@ -47,7 +47,7 @@ export default function HeroSection({ heroData, setAccentColor }: HeroSectionPro
   const roleText = heroData?.role_description || 'a 3d creator driven by crafting striking and unforgettable projects';
   const portraitUrl =
     heroData?.portrait ||
-    'https://shrug-person-78902957.figma.site/_components/v2/d24c01ad3a56fc65e942a1f501eb73db42d7cf9a/Rectangle_40443.81459862.png';
+    'https://cdn3d.iconscout.com/3d/premium/thumb/boy-avatar-6299533-5187871.png';
 
   const [selectedTheme, setSelectedTheme] = useState(themeOptions[0]);
   const { displayed, done } = useTypewriter(roleText, 38);
