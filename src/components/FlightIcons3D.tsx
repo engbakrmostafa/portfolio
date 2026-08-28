@@ -1,5 +1,5 @@
-import { useRef, useMemo } from 'react';
-import { Canvas, useFrame, useLoader } from '@react-three/fiber';
+import { useMemo } from 'react';
+import { Canvas, useLoader } from '@react-three/fiber';
 import { Float, Preload, Billboard } from '@react-three/drei';
 import * as THREE from 'three';
 import type { SkillData } from '../App';

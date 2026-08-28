@@ -4,6 +4,28 @@ import django.db.models.deletion
 from django.db import migrations, models
 
 
+
+def migrate_legacy_project_categories(apps, schema_editor):
+    Project = apps.get_model('portfolio', 'Project')
+    ProjectCategory = apps.get_model('portfolio', 'ProjectCategory')
+
+    for project in Project.objects.exclude(category__isnull=True).exclude(category=''):
+        category, _ = ProjectCategory.objects.get_or_create(
+            name=project.category,
+            defaults={'order': 0},
+        )
+        project.category = str(category.pk)
+        project.save(update_fields=['category'])
+
+
+def reverse_legacy_project_categories(apps, schema_editor):
+    Project = apps.get_model('portfolio', 'Project')
+    for project in Project.objects.exclude(category__isnull=True):
+        project.category = project.category.name
+        project.save(update_fields=['category'])
+
+
+
 class Migration(migrations.Migration):
 
     dependencies = [
@@ -26,6 +48,7 @@ class Migration(migrations.Migration):
                 'ordering': ['order', 'name'],
             },
         ),
+        migrations.RunPython(migrate_legacy_project_categories, reverse_legacy_project_categories),
         migrations.AlterField(
             model_name='project',
             name='category',

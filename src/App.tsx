@@ -11,6 +11,9 @@ import ContactSection from './components/ContactSection';
 import Footer from './components/Footer';
 import LoadingScreen from './components/LoadingScreen';
 
+// API URL from environment variable (with fallback for development)
+const API_URL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000';
+
 export interface HeroData {
   name: string;
   tagline: string;
@@ -90,7 +93,7 @@ function App() {
   // Fetch portfolio data from Django API
   useEffect(() => {
     const minLoadTime = new Promise((res) => setTimeout(res, 1400)); // show loading screen min 1.4s
-    const fetchData = fetch('http://127.0.0.1:8000/api/portfolio/')
+    const fetchData = fetch(`${API_URL}/api/portfolio/`)
       .then((res) => {
         if (!res.ok) throw new Error('API failed');
         return res.json() as Promise<PortfolioData>;

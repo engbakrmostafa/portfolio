@@ -70,7 +70,7 @@ export default function SkillsSection({ skillsData }: SkillsSectionProps) {
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(181,1,167,0.06)_0%,_transparent_70%)] pointer-events-none" />
 
         {/* Floating icons */}
-        {flightData.map(({ skill, startX, startY, midX1, midY1, midX2, midY2, duration, delay, size }, i) => (
+        {flightData.map(({ skill, startX, startY, midX1, midY1, midX2, midY2, duration, delay, size }) => (
           <motion.div
             key={skill.name}
             className="absolute cursor-pointer"
