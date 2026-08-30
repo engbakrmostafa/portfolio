@@ -11,8 +11,13 @@ import ContactSection from './components/ContactSection';
 import Footer from './components/Footer';
 import LoadingScreen from './components/LoadingScreen';
 
-// API URL from environment variable (with fallback for development)
-const API_URL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000';
+// Use the same origin in production so custom domains work on Railway.
+// Localhost values are only valid when running the frontend locally.
+const configuredApiUrl = (import.meta.env.VITE_API_URL || '').trim().replace(/\/$/, '');
+const localApiUrls = new Set(['http://127.0.0.1:8000', 'http://localhost:8000']);
+const API_URL = import.meta.env.PROD
+  ? (localApiUrls.has(configuredApiUrl) ? '' : configuredApiUrl)
+  : (configuredApiUrl || 'http://127.0.0.1:8000');
 
 export interface HeroData {
   name: string;
