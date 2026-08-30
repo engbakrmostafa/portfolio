@@ -72,7 +72,7 @@ export default function HeroSection({ heroData, setAccentColor }: HeroSectionPro
   };
 
   return (
-    <section className="h-screen flex flex-col justify-center items-center overflow-hidden relative noise-overlay">
+    <section className="h-screen flex flex-col justify-center items-center overflow-hidden relative noise-overlay md:pt-20">
       {/* ── Heading ──────────────────────────────────────────────── */}
       <motion.div
         initial={{ opacity: 0, y: 40 }}
