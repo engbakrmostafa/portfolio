@@ -1,0 +1,14 @@
+---
+description: Maintain the public-safe append-only project log.
+alwaysApply: true
+---
+
+# Project log maintenance
+
+- Read `PROJECT_LOG.md` and relevant local references before work.
+- Append one factual event for each material change, decision, commit, PR, deploy, test, blocker, completion, or cancellation.
+- Every event must include: event/observation time, change/component, grounded reason, result/verification, source ref, next action, and unresolved/removed/deferred work.
+- Update only affected status, profile, or checklist fields.
+- Central sanitized History sync must be routed through the serialized `Project Controller → Private Projects Controller → Codex History Controller` chain; Workers must not sync directly.
+- Do not create event-per-tool-call or recursive log-only churn. Do not infer deploy or test success.
+- Record public-safe facts only: no secrets, private transcripts, raw infrastructure output, sensitive account data, or internal resource identifiers.
