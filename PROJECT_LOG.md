@@ -10,7 +10,7 @@ This is the canonical, append-only, public-safe project log. Entries record veri
 - Public deployment domain: https://abdelrhaman.up.railway.app.
 - Verified repository/deployment observations: merged PR #1 added Sentry React monitoring; no GitHub Actions runs were found; the latest deployment attempt for `d4fbe19a975acc23ef1dfc5b0b1c4baf18fe9220` failed during `npm ci`; the active deployment continues serving the earlier successful main commit `2f2e43687b67a178fd14324a1860251edfcb0e7f`, which is an ancestor of `d4fbe19a975acc23ef1dfc5b0b1c4baf18fe9220`, and `main` is two commits ahead.
 - These are observations only; no deployment cause or success beyond the stated evidence is inferred.
-- Repository-scope disposition: `engbakrmostafa/portfolio` is the applicable canonical public repository; the documentation is installed on pushed branch `docs/project-log-rollout-20260908` at `fb76a5d8ac8192ce80a4c441c3938167e9f40ac1`, with PR #2 open and not yet integrated into `main`. `luka296/portfolio` is not applicable to this managed rollout: it is a verified public external historical transfer origin with viewer permission READ only, not canonical or owned. No shared current commit is claimed. The isolated worktree is a working copy of the canonical repository, not another repository or controller.
+- Repository-scope disposition: `engbakrmostafa/portfolio` is the applicable canonical public repository; the documentation is staged/published on remote branch `docs/project-log-rollout-20260908` at `fb76a5d8ac8192ce80a4c441c3938167e9f40ac1`, not installed because PR #2 is not merged into canonical `main`. `luka296/portfolio` is not applicable to this managed rollout: it is a verified public external historical transfer origin with viewer permission READ only, not canonical or owned. No shared current commit is claimed. The isolated worktree is a working copy of the canonical repository, not another repository or controller.
 
 ## Event: Project log rollout
 
@@ -29,8 +29,8 @@ This is the canonical, append-only, public-safe project log. Entries record veri
 - Grounded reason: Make the Tester-approved documentation rollout available for review and controlled integration.
 - Result/verification: Commit `fb76a5d8ac8192ce80a4c441c3938167e9f40ac1` was pushed; PR #2 is OPEN, mergeable, and CLEAN, with the exact three authorized files. Independent Tester PASS is recorded. No status checks are present.
 - Source ref: Commit `fb76a5d8ac8192ce80a4c441c3938167e9f40ac1` and PR #2.
-- Next action: PR review/merge decision, then serialized sanitized History intake through `Project Controller → Private Projects Controller → Codex History Controller`.
-- Unresolved/removed/deferred work: PR #2 is not merged into `main`; the latest main deploy remains failed at `npm ci`; the active deployment remains behind `main`; no CI runs were found; central sanitized History intake remains pending. No deploy, application, database, or runtime change was made.
+- Next action: Safe PR review/merge decision after proving whether the canonical Railway service connected to `main` can exclude this docs-only merge from automatic runtime deployment, then serialized sanitized History intake through `Project Controller → Private Projects Controller → Codex History Controller`.
+- Unresolved/removed/deferred work: PR #2 is not merged into `main`; the canonical Railway service is connected to `main`, and no evidence proves this docs-only merge is excluded from automatic runtime deployment, so PR #2 remains unmerged pending a safe integration decision/proof. The latest main deploy remains failed at `npm ci`; the active deployment remains behind `main`; no CI runs were found; `central_sync: pending` — a sanitized packet was sent/available through serialized `Project Controller → Private Projects Controller → Codex History Controller` intake but is not yet confirmed integrated. No deploy, application, database, or runtime change was made.
 
 ## Ongoing unresolved observations
 
@@ -38,5 +38,6 @@ This is the canonical, append-only, public-safe project log. Entries record veri
 - Active deployment remains behind `main`.
 - No GitHub Actions runs were found.
 - PR #2 remains pending integration into `main`.
-- Central sanitized History intake remains pending through the serialized Controller chain.
+- `central_sync: pending` — sanitized packet sent/available through serialized `Project Controller → Private Projects Controller → Codex History Controller` intake, not yet confirmed integrated.
+- Canonical Railway service is connected to `main`; no evidence proves this docs-only merge is excluded from automatic runtime deployment, so safe integration proof/decision remains pending.
 - Independent Tester recorded PASS for this documentation rollout after verifying the exact three files, frontmatter/links, public-safe provenance, serialized History route, formatting/diff checks, and zero out-of-scope changes.
